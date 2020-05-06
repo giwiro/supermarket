@@ -1,6 +1,8 @@
 package com.retaily.supermarket.modules.shoppingcart
 
 import com.retaily.supermarket.database.entities.*
+import com.retaily.supermarket.models.ShoppingCart
+import com.retaily.supermarket.models.ShoppingCartItem
 import com.retaily.supermarket.models.ShoppingCartItemStatus
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
@@ -52,7 +54,7 @@ class ShoppingCartUseCase(@Autowired val shoppingCartRepository: ShoppingCartRep
             existingShoppingCartItem.amount = existingShoppingCartItem.amount?.plus(request.amount)
 
             shoppingCartItemRepository.save(existingShoppingCartItem)
-        }else {
+        } else {
             val shoppingCartItemInsert =
                     ShoppingCartItemEntity(
                             shoppingCart,
@@ -61,6 +63,11 @@ class ShoppingCartUseCase(@Autowired val shoppingCartRepository: ShoppingCartRep
                             request.amount)
 
             shoppingCartItemRepository.save(shoppingCartItemInsert)
+        }
+
+        if (shoppingCart.items.isEmpty()) {
+            shoppingCartRepository.flush()
+            shoppingCartRepository.clear()
         }
     }
 
@@ -72,7 +79,7 @@ class ShoppingCartUseCase(@Autowired val shoppingCartRepository: ShoppingCartRep
                         request.productId)
         if (existingShoppingCartItem == null) {
             throw NonExistentShoppingCartItemException("Shopping cart item does not exist")
-        }else {
+        } else {
             val shoppingCartItemStatus = shoppingCartItemStatusRepository
                     .findById(ShoppingCartItemStatus.ARCHIVED.id).orElseGet(null)
             existingShoppingCartItem.shoppingCartItemStatus = shoppingCartItemStatus

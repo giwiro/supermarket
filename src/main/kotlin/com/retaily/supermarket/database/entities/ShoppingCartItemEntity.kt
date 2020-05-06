@@ -55,7 +55,7 @@ interface ShoppingCartItemRepository : CrudRepository<ShoppingCartItemEntity, Lo
     fun findByShoppingCartAndProduct(@Param("shoppingCartId") shoppingCartId: Long,
                                      @Param("shoppingCartId") productId: Long): ShoppingCartItemEntity?
 
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     fun save(entity: ShoppingCartItemEntity): ShoppingCartItemEntity
 
     override fun delete(entity: ShoppingCartItemEntity)

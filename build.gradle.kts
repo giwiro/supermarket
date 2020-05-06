@@ -8,11 +8,25 @@ plugins {
 }
 
 group = "com.retaily"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
 	mavenCentral()
+	maven { setUrl("https://repo.gradle.org/gradle/repo") }
+	maven { setUrl("https://repo.spring.io/snapshot") }
+	maven { setUrl("https://repo.spring.io/milestone") }
+	flatDir {
+		dirs("libs")
+	}
+}
+
+extra["springCloudVersion"] = "Hoxton.SR3"
+
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+	}
 }
 
 dependencies {
@@ -24,6 +38,9 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.postgresql:postgresql:42.2.12")
+	implementation("org.springframework.cloud:spring-cloud-starter-config")
+	implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-config")
+	implementation(":common-0.0.1")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 	}
@@ -38,4 +55,14 @@ tasks.withType<KotlinCompile> {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
 		jvmTarget = "1.8"
 	}
+}
+
+tasks.register("printVersion") {
+	doLast {
+		println(project.version)
+	}
+}
+
+springBoot {
+	buildInfo()
 }

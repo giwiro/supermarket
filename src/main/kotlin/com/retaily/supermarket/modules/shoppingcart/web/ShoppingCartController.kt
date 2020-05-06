@@ -1,12 +1,11 @@
 package com.retaily.supermarket.modules.shoppingcart.web
 
-import com.retaily.supermarket.common.web.Authorized
-import com.retaily.supermarket.common.web.SessionService
+import com.retaily.common.web.Authorized
+import com.retaily.common.web.SessionService
 import com.retaily.supermarket.models.ShoppingCart
 import com.retaily.supermarket.modules.shoppingcart.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
-import javax.servlet.http.HttpSession
 import javax.validation.Valid
 
 @RestController
