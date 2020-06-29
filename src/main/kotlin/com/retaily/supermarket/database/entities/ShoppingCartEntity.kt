@@ -1,30 +1,40 @@
 package com.retaily.supermarket.database.entities
 
 import com.retaily.supermarket.models.ShoppingCart
-
+import javax.persistence.CascadeType
+import javax.persistence.Entity
+import javax.persistence.EntityManager
+import javax.persistence.FetchType
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.Index
+import javax.persistence.OneToMany
+import javax.persistence.PersistenceContext
+import javax.persistence.Table
 import org.hibernate.annotations.Where
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
-import org.springframework.data.jpa.repository.Query
-import javax.persistence.*
-
 
 @Entity
-@Cacheable(false)
-@Table(name = "shopping_cart", indexes = [
-    Index(name = "shopping_cart_user_id_idx", columnList = "userId", unique = true)
-])
+@Table(
+    name = "shopping_cart",
+    indexes = [
+        Index(name = "shopping_cart_user_id_idx", columnList = "userId", unique = true)
+    ]
+)
 class ShoppingCartEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var shoppingCartId: Long? = null
     var userId: Long? = null
     @OneToMany(
-            mappedBy = "shoppingCart",
-            cascade = [CascadeType.ALL],
-            fetch = FetchType.EAGER,
-            orphanRemoval = true
+        mappedBy = "shoppingCart",
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.EAGER,
+        orphanRemoval = true
     )
     @Where(clause = "shopping_cart_item_status_id = 1")
     var items: List<ShoppingCartItemEntity> = emptyList()
@@ -33,7 +43,7 @@ class ShoppingCartEntity() {
         this.userId = userId
     }
 
-    fun mapToModel(): ShoppingCart = ShoppingCart(userId!!, items.map { it.mapToModel() })
+    fun mapToModel(): ShoppingCart = ShoppingCart(shoppingCartId!!, items.map { it.mapToModel() })
 }
 
 interface ShoppingCartRepositoryCustom {
@@ -46,12 +56,12 @@ class ShoppingCartRepositoryImpl : ShoppingCartRepositoryCustom {
     private lateinit var entityManager: EntityManager
 
     @Override
-    override fun flush()  {
+    override fun flush() {
         entityManager.flush()
     }
 
     @Override
-    override fun clear()  {
+    override fun clear() {
         entityManager.clear()
     }
 }

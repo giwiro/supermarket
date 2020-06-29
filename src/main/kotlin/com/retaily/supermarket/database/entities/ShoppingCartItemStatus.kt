@@ -1,9 +1,11 @@
 package com.retaily.supermarket.database.entities
 
+import java.util.Optional
+import javax.persistence.Entity
+import javax.persistence.Id
+import javax.persistence.Table
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
-import java.util.*
-import javax.persistence.*
 
 @Entity
 @Table(name = "shopping_cart_item_status")
@@ -14,7 +16,7 @@ class ShoppingCartItemStatusEntity {
 
     @Override
     override fun toString(): String {
-        return this.shoppingCartItemStatusName!!;
+        return this.shoppingCartItemStatusName!!
     }
 }
 

@@ -8,4 +8,4 @@ import org.springframework.web.bind.annotation.ResponseStatus
 class NonExistentProductException(message:String): RuntimeException(message)*/
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-class NonExistentShoppingCartItemException(message:String): RuntimeException(message)
+class NonExistentShoppingCartItemException(message: String) : RuntimeException(message)
