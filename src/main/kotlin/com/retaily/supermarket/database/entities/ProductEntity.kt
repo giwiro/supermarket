@@ -52,7 +52,7 @@ class ProductRepositoryImpl : ProductRepositoryCustom {
         val cq: CriteriaQuery<ProductEntity> = cb.createQuery(ProductEntity::class.java)
 
         val root = cq.from(ProductEntity::class.java)
-        val predicates: MutableList<Predicate> = ArrayList<Predicate>()
+        val predicates = ArrayList<Predicate>()
 
         predicates.add(cb.equal(root.get<ProductEntity>("enabled"), true))
 
