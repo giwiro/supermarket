@@ -5,7 +5,7 @@ import java.math.BigDecimal
 import org.springframework.stereotype.Component
 
 @Component
-class PricingUseCase() {
+class PricingUseCase {
     fun calculate(request: CalculateRequest): Pricing {
         var subtotal = BigDecimal.ZERO
 

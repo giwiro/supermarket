@@ -9,6 +9,6 @@ import org.springframework.stereotype.Component
 class ProductUseCase(@Autowired val productRepository: ProductRepository) {
     fun getProducts(request: GetProductsRequest): List<Product> {
         val products = productRepository.findAllEnabled(request.category, request.price)
-        return (products ?: emptyList()).map { it.mapToModel() }
+        return products.map { it.mapToModel() }
     }
 }

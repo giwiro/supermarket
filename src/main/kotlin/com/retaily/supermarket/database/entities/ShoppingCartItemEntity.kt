@@ -64,7 +64,8 @@ interface ShoppingCartItemRepository : CrudRepository<ShoppingCartItemEntity, Lo
     @Query(
         nativeQuery = true,
         value = "SELECT sci.* FROM supermarket.shopping_cart_item sci " +
-            "WHERE sci.shopping_cart_id = ?1 AND sci.shopping_cart_item_product_id = ?2 AND shopping_cart_item_status_id = 1"
+            "WHERE sci.shopping_cart_id = ?1 AND sci.shopping_cart_item_product_id = ?2 " +
+            "AND shopping_cart_item_status_id = 1"
     )
     fun findByShoppingCartAndProduct(
         @Param("shoppingCartId") shoppingCartId: Long,

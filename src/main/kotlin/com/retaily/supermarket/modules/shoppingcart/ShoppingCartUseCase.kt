@@ -40,7 +40,8 @@ class ShoppingCartUseCase(
     fun addProduct(request: AddProductRequest) {
         val shoppingCart = shoppingCartService.getShoppingCartGuaranteed(request.userId)
         val product = productRepository.findById(request.productId).orElseGet(null)
-        val shoppingCartItemStatus = shoppingCartItemStatusRepository.findById(ShoppingCartItemStatus.CREATED.id).orElseGet(null)
+        val shoppingCartItemStatus =
+            shoppingCartItemStatusRepository.findById(ShoppingCartItemStatus.CREATED.id).orElseGet(null)
 
         val existingShoppingCartItem = shoppingCartItemRepository
             .findByShoppingCartAndProduct(

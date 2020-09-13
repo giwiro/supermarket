@@ -33,7 +33,8 @@ class ProductEntity {
     @JoinColumn(name = "product_category_id", nullable = false)
     var productCategory: ProductCategoryEntity? = null
 
-    fun mapToModel(): Product = Product(productId!!, name!!, productCategory!!.mapToModel(), price!!, imageUrl!!, enabled!!)
+    fun mapToModel(): Product =
+        Product(productId!!, name!!, productCategory!!.mapToModel(), price!!, imageUrl!!, enabled!!)
 }
 
 interface ProductRepositoryCustom {
