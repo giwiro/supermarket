@@ -30,11 +30,11 @@ class ProductEntity {
     var imageUrl: String? = null
     var enabled: Boolean? = null
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_category_id", nullable = false)
-    var productCategory: ProductCategoryEntity? = null
+    @JoinColumn(name = "category_id", nullable = false)
+    var category: ProductCategoryEntity? = null
 
     fun mapToModel(): Product =
-        Product(productId!!, name!!, productCategory!!.mapToModel(), price!!, imageUrl!!, enabled!!)
+        Product(productId!!, name!!, category!!.mapToModel(), price!!, imageUrl!!, enabled!!)
 }
 
 interface ProductRepositoryCustom {

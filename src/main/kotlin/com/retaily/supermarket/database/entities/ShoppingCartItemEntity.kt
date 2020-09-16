@@ -1,7 +1,15 @@
 package com.retaily.supermarket.database.entities
 
 import com.retaily.supermarket.models.ShoppingCartItem
+import org.hibernate.annotations.CreationTimestamp
+import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.CrudRepository
+import org.springframework.data.repository.query.Param
+import org.springframework.stereotype.Repository
+import java.util.Date
 import javax.persistence.Cacheable
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
@@ -11,11 +19,6 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToOne
 import javax.persistence.Table
-import org.springframework.data.jpa.repository.Modifying
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
-import org.springframework.data.repository.query.Param
-import org.springframework.stereotype.Repository
 
 @Entity
 @Cacheable(false)
@@ -37,6 +40,10 @@ class ShoppingCartItemEntity() {
     @JoinColumn(name = "shopping_cart_item_product_id", nullable = false)
     var product: ProductEntity? = null
     var amount: Int? = null
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    val createdAt: Date? = null
 
     constructor(
         shoppingCart: ShoppingCartEntity,
@@ -69,7 +76,7 @@ interface ShoppingCartItemRepository : CrudRepository<ShoppingCartItemEntity, Lo
     )
     fun findByShoppingCartAndProduct(
         @Param("shoppingCartId") shoppingCartId: Long,
-        @Param("shoppingCartId") productId: Long
+        @Param("productId") productId: Long
     ): ShoppingCartItemEntity?
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)

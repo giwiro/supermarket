@@ -1,6 +1,7 @@
 package com.retaily.supermarket.database.entities
 
 import com.retaily.supermarket.models.Order
+import org.hibernate.annotations.CreationTimestamp
 import javax.persistence.Entity
 import javax.persistence.EntityManager
 import javax.persistence.GeneratedValue
@@ -13,6 +14,13 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.util.Date
+import javax.persistence.CascadeType
+import javax.persistence.Column
+import javax.persistence.FetchType
+import javax.persistence.JoinColumn
+import javax.persistence.OneToMany
+import javax.persistence.OneToOne
 
 @Entity
 @Table(
@@ -26,19 +34,28 @@ class OrderEntity() {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var orderId: Long? = null
     var userId: Long? = null
-    /*@OneToMany(
-        mappedBy = "shoppingCart",
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_status_id", nullable = false)
+    var orderStatus: OrderStatusEntity? = null
+
+    @OneToMany(
+        mappedBy = "order",
         cascade = [CascadeType.ALL],
         fetch = FetchType.EAGER,
         orphanRemoval = true
     )
-    var items: List<ShoppingCartItemEntity> = emptyList()*/
+    var items: List<OrderItemEntity> = emptyList()
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    val createdAt: Date? = null
 
     constructor(userId: Long) : this() {
         this.userId = userId
     }
 
-    fun mapToModel(): Order = Order(userId!!)
+    fun mapToModel(): Order = Order(userId!!, orderStatus.toString())
 }
 
 interface OrderRepositoryCustom {

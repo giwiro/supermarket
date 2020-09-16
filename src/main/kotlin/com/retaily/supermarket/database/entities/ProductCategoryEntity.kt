@@ -11,10 +11,10 @@ import org.springframework.stereotype.Repository
 @Table(name = "product_category")
 class ProductCategoryEntity {
     @Id
-    var productCategoryId: Long? = null
+    var categoryId: Long? = null
     var name: String? = null
 
-    fun mapToModel(): ProductCategory = ProductCategory(productCategoryId!!, name!!)
+    fun mapToModel(): ProductCategory = ProductCategory(categoryId!!, name!!)
 }
 
 @Repository

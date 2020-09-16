@@ -1,8 +1,13 @@
 package com.retaily.supermarket.models
 
+import java.math.BigDecimal
+
 data class OrderItem(
     val id: Long,
-    val product: Product,
+    val name: String,
+    val category: ProductCategory,
+    val price: BigDecimal,
+    val imageUrl: String,
     val amount: Int
 ) {
     val type = "order-item"

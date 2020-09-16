@@ -1,6 +1,7 @@
 package com.retaily.supermarket.database.entities
 
 import com.retaily.supermarket.models.ShoppingCart
+import org.hibernate.annotations.CreationTimestamp
 import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.EntityManager
@@ -17,6 +18,9 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.util.Date
+import javax.persistence.Column
+import javax.persistence.OrderBy
 
 @Entity
 @Table(
@@ -37,7 +41,12 @@ class ShoppingCartEntity() {
         orphanRemoval = true
     )
     @Where(clause = "shopping_cart_item_status_id = 1")
+    @OrderBy(value = "created_at ASC")
     var items: List<ShoppingCartItemEntity> = emptyList()
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    val createdAt: Date? = null
 
     constructor(userId: Long) : this() {
         this.userId = userId
