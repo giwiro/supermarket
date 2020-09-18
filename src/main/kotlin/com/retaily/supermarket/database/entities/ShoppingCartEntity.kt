@@ -1,8 +1,9 @@
 package com.retaily.supermarket.database.entities
 
 import com.retaily.supermarket.models.ShoppingCart
-import org.hibernate.annotations.CreationTimestamp
+import java.util.Date
 import javax.persistence.CascadeType
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EntityManager
 import javax.persistence.FetchType
@@ -11,16 +12,15 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Index
 import javax.persistence.OneToMany
+import javax.persistence.OrderBy
 import javax.persistence.PersistenceContext
 import javax.persistence.Table
+import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.Where
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
-import java.util.Date
-import javax.persistence.Column
-import javax.persistence.OrderBy
 
 @Entity
 @Table(

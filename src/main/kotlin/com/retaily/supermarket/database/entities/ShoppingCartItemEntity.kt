@@ -1,12 +1,6 @@
 package com.retaily.supermarket.database.entities
 
 import com.retaily.supermarket.models.ShoppingCartItem
-import org.hibernate.annotations.CreationTimestamp
-import org.springframework.data.jpa.repository.Modifying
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
-import org.springframework.data.repository.query.Param
-import org.springframework.stereotype.Repository
 import java.util.Date
 import javax.persistence.Cacheable
 import javax.persistence.Column
@@ -19,6 +13,12 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToOne
 import javax.persistence.Table
+import org.hibernate.annotations.CreationTimestamp
+import org.springframework.data.jpa.repository.Modifying
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.CrudRepository
+import org.springframework.data.repository.query.Param
+import org.springframework.stereotype.Repository
 
 @Entity
 @Cacheable(false)

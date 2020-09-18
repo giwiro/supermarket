@@ -13,7 +13,7 @@ class OrderUseCase(
 ) {
     fun getOrders(request: GetOrdersRequest): List<Order> {
         val orders = orderRepository.findByUserId(request.userId)
-        return orders.map{ it.mapToModel() }
+        return orders.map { it.mapToModel() }
     }
 
     /*fun createOrder(request: CreateOrdersRequest): Order {

@@ -1,26 +1,26 @@
 package com.retaily.supermarket.database.entities
 
 import com.retaily.supermarket.models.Order
-import org.hibernate.annotations.CreationTimestamp
+import java.util.Date
+import javax.persistence.CascadeType
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EntityManager
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.Index
+import javax.persistence.JoinColumn
+import javax.persistence.OneToMany
+import javax.persistence.OneToOne
 import javax.persistence.PersistenceContext
 import javax.persistence.Table
+import org.hibernate.annotations.CreationTimestamp
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
-import java.util.Date
-import javax.persistence.CascadeType
-import javax.persistence.Column
-import javax.persistence.FetchType
-import javax.persistence.JoinColumn
-import javax.persistence.OneToMany
-import javax.persistence.OneToOne
 
 @Entity
 @Table(
@@ -47,12 +47,22 @@ class OrderEntity() {
     )
     var items: List<OrderItemEntity> = emptyList()
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "shipping_address_id", nullable = false)
+    var shippingAddress: AddressEntity? = null
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "billing_address_id", nullable = false)
+    var billingAddress: AddressEntity? = null
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt: Date? = null
 
-    constructor(userId: Long) : this() {
+    constructor(userId: Long, shippingAddress: AddressEntity, billingAddress: AddressEntity) : this() {
         this.userId = userId
+        this.shippingAddress = shippingAddress
+        this.billingAddress = billingAddress
     }
 
     fun mapToModel(): Order = Order(userId!!, orderStatus.toString())
