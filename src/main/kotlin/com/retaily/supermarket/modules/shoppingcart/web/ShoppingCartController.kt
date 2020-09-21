@@ -25,7 +25,6 @@ class ShoppingCartController constructor(
     @Autowired val useCase: ShoppingCartUseCase,
     @Autowired val sessionService: SessionService
 ) {
-
     @GetMapping(path = ["/"])
     @Authorized
     fun getShoppingCart(): ShoppingCart {

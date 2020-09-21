@@ -10,5 +10,13 @@ data class OrderItem(
     val imageUrl: String,
     val amount: Int
 ) {
-    val type = "order-item"
+    val type = "orderItem"
+}
+
+data class OrderItemShort(
+    val id: Long,
+    val price: BigDecimal,
+    val amount: Int
+) {
+    val type = "orderItemShort"
 }

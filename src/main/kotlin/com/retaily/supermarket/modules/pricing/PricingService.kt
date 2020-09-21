@@ -1,16 +1,17 @@
 package com.retaily.supermarket.modules.pricing
 
 import com.retaily.supermarket.models.Pricing
+import com.retaily.supermarket.models.ShoppingCart
 import java.math.BigDecimal
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
-@Component
-class PricingUseCase {
-    fun calculate(request: CalculateRequest): Pricing {
+@Service
+class PricingService {
+    fun calculate(shoppingCart: ShoppingCart): Pricing {
         var subtotal = BigDecimal.ZERO
 
         // Calculate subtotal
-        for (i in request.shoppingCart.items) {
+        for (i in shoppingCart.items) {
             val a = BigDecimal(i.amount)
             subtotal += i.product.price.multiply(a)
         }

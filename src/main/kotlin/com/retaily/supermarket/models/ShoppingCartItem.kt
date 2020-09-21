@@ -6,5 +6,5 @@ data class ShoppingCartItem(
     val product: Product,
     val amount: Int
 ) {
-    val type = "shopping-cart-item"
+    val type = "shoppingCartItem"
 }

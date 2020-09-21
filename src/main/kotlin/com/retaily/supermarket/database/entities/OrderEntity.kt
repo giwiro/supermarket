@@ -21,6 +21,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.util.Optional
 
 @Entity
 @Table(
@@ -34,6 +35,7 @@ class OrderEntity() {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var orderId: Long? = null
     var userId: Long? = null
+    var paymentToken: String? = null
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_status_id", nullable = false)
@@ -59,13 +61,29 @@ class OrderEntity() {
     @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt: Date? = null
 
-    constructor(userId: Long, shippingAddress: AddressEntity, billingAddress: AddressEntity) : this() {
+    constructor(
+        userId: Long,
+        // paymentToken: String,
+        orderStatus: OrderStatusEntity,
+        shippingAddress: AddressEntity,
+        billingAddress: AddressEntity
+    ) : this() {
         this.userId = userId
+        // this.paymentToken = paymentToken
+        this.orderStatus = orderStatus
         this.shippingAddress = shippingAddress
         this.billingAddress = billingAddress
     }
 
-    fun mapToModel(): Order = Order(userId!!, orderStatus.toString())
+    fun mapToModel(): Order =
+        Order(
+            userId!!,
+            orderStatus.toString(),
+            shippingAddress!!.mapToModel(),
+            billingAddress!!.mapToModel(),
+            paymentToken,
+            items.map { it -> it.mapToModel() }
+        )
 }
 
 interface OrderRepositoryCustom {
@@ -90,7 +108,7 @@ class OrderRepositoryImpl : OrderRepositoryCustom {
 
 @Repository
 interface OrderRepository : CrudRepository<OrderEntity, Long>, OrderRepositoryCustom {
-    @Query(value = "SELECT sc FROM #{#entityName} sc WHERE sc.userId = ?1")
+    @Query(value = "SELECT o FROM #{#entityName} o WHERE o.userId = ?1")
     fun findByUserId(@Param("userId") userId: Long): List<OrderEntity>
 
     fun save(entity: OrderEntity): OrderEntity
