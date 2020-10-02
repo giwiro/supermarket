@@ -21,7 +21,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
-import java.util.Optional
 
 @Entity
 @Table(
@@ -36,6 +35,10 @@ class OrderEntity() {
     var orderId: Long? = null
     var userId: Long? = null
     var paymentToken: String? = null
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_user_id", nullable = false)
+    var orderUser: OrderUserEntity? = null
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_status_id", nullable = false)
@@ -66,13 +69,15 @@ class OrderEntity() {
         // paymentToken: String,
         orderStatus: OrderStatusEntity,
         shippingAddress: AddressEntity,
-        billingAddress: AddressEntity
+        billingAddress: AddressEntity,
+        orderUser: OrderUserEntity
     ) : this() {
         this.userId = userId
         // this.paymentToken = paymentToken
         this.orderStatus = orderStatus
         this.shippingAddress = shippingAddress
         this.billingAddress = billingAddress
+        this.orderUser = orderUser
     }
 
     fun mapToModel(): Order =
@@ -82,7 +87,8 @@ class OrderEntity() {
             shippingAddress!!.mapToModel(),
             billingAddress!!.mapToModel(),
             paymentToken,
-            items.map { it -> it.mapToModel() }
+            items.map { it -> it.mapToModel() },
+            orderUser!!.mapToModel()
         )
 }
 

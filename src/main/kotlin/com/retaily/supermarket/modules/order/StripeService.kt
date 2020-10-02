@@ -9,15 +9,23 @@ import com.stripe.model.PaymentIntent
 import java.math.BigDecimal
 import java.util.ArrayList
 import java.util.HashMap
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
 class StripeService {
+    val logger = LoggerFactory.getLogger(StripeService::class.java)
+
     @Value("\${stripe.keys.secret}")
     val apiSecret: String? = null
 
-    fun createPaymentIntent(pricing: Pricing, order: OrderShort, billingAddress: Address, userId: Long): PaymentIntent {
+    fun createPaymentIntent(
+        pricing: Pricing,
+        order: OrderShort,
+        billingAddress: Address,
+        userId: Long
+    ): PaymentIntent {
         Stripe.apiKey = apiSecret
         val paymentMethodTypes: MutableList<Any> = ArrayList()
         paymentMethodTypes.add("card")
@@ -41,6 +49,8 @@ class StripeService {
             "user_id" to userId
         )
 
-        return PaymentIntent.create(params)
+        val i = PaymentIntent.create(params)
+        logger.info("PaymentIntent created: ${i.id}")
+        return i
     }
 }

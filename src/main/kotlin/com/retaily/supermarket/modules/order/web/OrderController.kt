@@ -4,7 +4,6 @@ import com.retaily.common.web.SessionService
 import com.retaily.supermarket.models.Address
 import com.retaily.supermarket.models.Order
 import com.retaily.supermarket.modules.order.CreateOrdersRequest
-import com.retaily.supermarket.modules.order.GetOrderRequest
 import com.retaily.supermarket.modules.order.OrderUseCase
 import javax.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired

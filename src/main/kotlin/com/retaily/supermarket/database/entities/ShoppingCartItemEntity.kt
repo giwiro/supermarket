@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToOne
 import javax.persistence.Table
+import javax.transaction.Transactional
 import org.hibernate.annotations.CreationTimestamp
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -78,6 +79,14 @@ interface ShoppingCartItemRepository : CrudRepository<ShoppingCartItemEntity, Lo
         @Param("shoppingCartId") shoppingCartId: Long,
         @Param("productId") productId: Long
     ): ShoppingCartItemEntity?
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = "UPDATE #{#entityName} sci SET sci.shoppingCartItemStatus = 10" +
+            "WHERE sci.shoppingCart.shoppingCartId = ?1"
+    )
+    fun archiveItems(@Param("shoppingCartId") shoppingCartId: Long)
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     fun save(entity: ShoppingCartItemEntity): ShoppingCartItemEntity

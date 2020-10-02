@@ -39,9 +39,10 @@ dependencies {
     implementation("org.postgresql:postgresql:42.2.12")
     implementation("org.springframework.cloud:spring-cloud-starter-config")
     implementation("org.springframework.cloud:spring-cloud-starter-kubernetes-config")
+    implementation("org.springframework.kafka:spring-kafka")
     implementation("com.stripe:stripe-java:20.6.0")
     implementation("com.google.code.gson:gson:2.8.6")
-    implementation(":common-0.0.1")
+    implementation(":common-0.0.2")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }

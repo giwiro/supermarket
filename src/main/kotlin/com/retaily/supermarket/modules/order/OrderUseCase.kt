@@ -8,6 +8,8 @@ import com.retaily.supermarket.database.entities.OrderItemEntity
 import com.retaily.supermarket.database.entities.OrderItemRepository
 import com.retaily.supermarket.database.entities.OrderRepository
 import com.retaily.supermarket.database.entities.OrderStatusRepository
+import com.retaily.supermarket.database.entities.OrderUserEntity
+import com.retaily.supermarket.database.entities.OrderUserRepository
 import com.retaily.supermarket.models.Order
 import com.retaily.supermarket.models.OrderItemShort
 import com.retaily.supermarket.models.OrderShort
@@ -23,6 +25,7 @@ class OrderUseCase(
     @Autowired val orderItemRepository: OrderItemRepository,
     @Autowired val addressRepository: AddressRepository,
     @Autowired val orderStatusRepository: OrderStatusRepository,
+    @Autowired val orderUserRepository: OrderUserRepository,
     @Autowired val pricingService: PricingService,
     @Autowired val stripeService: StripeService,
     @Autowired val sessionService: SessionService,
@@ -71,8 +74,18 @@ class OrderUseCase(
             )
         )
 
+        val user = sessionService.getUser()
+
+        val orderUser = orderUserRepository.save(
+            OrderUserEntity(
+                user!!.firstName!!,
+                user.lastName!!,
+                user.email!!
+            )
+        )
+
         val insertedOrder = orderRepository.save(
-            OrderEntity(request.userId, orderStatus, shippingAddress, billingAddress)
+            OrderEntity(request.userId, orderStatus, shippingAddress, billingAddress, orderUser)
         )
 
         shoppingCart.items.forEach {
@@ -98,11 +111,13 @@ class OrderUseCase(
         val orderShort = OrderShort(
             order.id,
             order.status,
-            order.items.map { i -> OrderItemShort(
-                i.id,
-                i.price,
-                i.amount
-            ) }
+            order.items.map { i ->
+                OrderItemShort(
+                    i.id,
+                    i.price,
+                    i.amount
+                )
+            }
         )
 
         val paymentIntent =
@@ -121,5 +136,16 @@ class OrderUseCase(
         orderRepository.clear()
 
         return getOrder(GetOrderRequest(insertedOrder.orderId!!))
+    }
+
+    fun confirmOrderPayment(request: ConfirmOrderPaymentRequest): Order {
+        val oldOrder = orderRepository.findById(request.orderId).orElseGet(null)
+            ?: throw OrderNotFound("The order was not found")
+        val orderStatus = orderStatusRepository.findById(OrderStatus.PAID.id).orElseGet(null)
+        oldOrder.orderStatus = orderStatus
+        orderRepository.save(oldOrder)
+        shoppingCartService.deleteShoppingCart(oldOrder.userId!!)
+
+        return orderRepository.findById(request.orderId).get().mapToModel()
     }
 }

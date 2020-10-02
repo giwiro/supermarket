@@ -6,7 +6,8 @@ data class Order(
     val shippingAddress: Address,
     val billingAddress: Address,
     val paymentToken: String?,
-    val items: List<OrderItem>
+    val items: List<OrderItem>,
+    val user: OrderUser
 ) {
     val type = "order"
 }
